@@ -1,0 +1,314 @@
+http://cdn.staticfile.org/moment.js/2.24.0/moment.js
+
+1.url(UniformResourceLacatior)统一资源定位符 服务器（电脑）  客户端
+  http://www.baidu.com/liulongbinlogs/p/112313.html
+(1.客户端与服务器之间的通信协议 http
+(2.服务器名称(域名 domain name) www.baidu.com 
+(3.存放地址  liulongbinlogs/p/112313.html
+DNS（domain name->IP）
+(4.查询参数
+(5.？name=zs&age=20#hash
+2.通信过程  发请求(xhr,$.ajax,axios,fetch)->处理->响应
+  f12 ->Network->Doc(document)->headers  response为响应内容
+3.XMLHttpRequest对象(xhr) var xhrObj=new XMLHttpRequest()
+4.请求方式：post(向服务器提交数据)/get（获取服务端资源）
+5.Ajax(异步js和XML)网页与服务器之间的数据交互 axios 
+$.get(url,[data],[calback])获取  
+$.post()提交 
+$.ajax()既可以获取也可以提交
+6.Json 属性的键双引号
+{
+  "data":[],
+  "xiaohu":[]
+}
+7.跨域(浏览器)
+同源:同协议、同域名（ip）和同端口
+同源策略:从一个域上加载的脚本不允许访问另外一个域的文档属性 ，是浏览器上为安全性考虑实施的非常重要的安全策略 
+A网站的js不允许和非同源网站C之间资源的交互 --引起跨域
+无法向非同源地址发送Ajax、fatch请求
+如何跨域数据请求：
+(1.JSONP：只支持get(辣鸡) 动态创建<script>的标签的src属性实现的
+将函数调用abc放到另一个文件，用<script src='./js/getdata.js?calback=abc'></script>调用
+(2.CORS   
+http://www.ruanyifeng.com/blog/2016/04/cors.html
+浏览器将CORS请求分成两类：简单请求（simple request）和非简单请求（not-so-simple request）
+只要同时满足以下两大条件，就属于简单请求。
+（1) 请求方法是以下三种方法之一：
+HEAD
+GET
+POST
+（2）HTTP的头信息不超出以下几种字段：
+Accept
+Accept-Language
+Content-Language
+Last-Event-ID
+Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain
+
+
+8.防抖
+应用场景：不是输入一次发一个请求，完整输入完再一起发请求
+设计模式:装饰者模式--封装防抖 输入什么返回什么，只是向礼物包装一样加了点东西
+function debonece(fn,delay) {//包装类
+       let timer = null//闭包这个位置的变量会被保存，一直重置timer
+       return function (...args) {
+                //有timer就清除timer，先清空再赋值
+           timer && clearTimeout(timer)
+           timer = setTimeout(() => {
+             //模仿fn执行
+             //模仿fn传参
+            //模仿fn的this
+          fn.call(this,...args)
+       console.log(this);//<input type="text" name="" id="search">
+              }, delay)
+          }
+      }
+
+ function search(e) {
+       //将要执行的任务
+       console.log(e.target.value);
+ }
+ const seboneceSearch = debonece(search, 600)//将search放到包装里
+ document.querySelector('#search').addEventListener('input', seboneceSearch)
+
+9.节流
+手写防抖节流
+https://www.cnblogs.com/formercoding/p/12864441.html
+互斥锁,节流阀
+
+
+
+区别：防抖最后执行一次，节流一直输入一直执行，规定时间段内限制
+
+10.状态码
+200 ok
+
+304 请求已发过返回上次结果(缓存相关)
+
+//前端错误
+400   语法错误(大多数参数传错)
+401   请求未授权 没登陆/登录过期  
+403   forbidden  拒绝访问              
+404   页面找不到(路径)--url
+//后端问题
+500   服务器内部错误(接口代码报错)  
+502   bad gataway              
+503   服务器资源满了不可用
+
+11.axios
+const req=axios({
+  method:'GET'//post get delete put 
+  url:'xx'
+  params:{},//里面的值拼到url中，都可以用
+  data:{ usename:'zhangsan',pwd:'1213'}//请求体 request body 隐式发送给接口
+  header:{}//请求头
+})
+req为Promise实例
+async function fn(){
+   const res await req;
+   log(res)
+}
+req.then((res)=>{ throw 'xxx'//throw让程序进入catch })//此处也可能出错
+   .catch((err)=>{ 页面不报错 })//出错
+
+12.promise  --包裹异步进程
+
+promise(构造函数)新建后就会立即执行,接收一个参数：函数，并且这个函数需要传入两个参数：
+resolve ：异步操作执行成功后的回调函数
+reject：异步操作执行失败后的回调函数
+
+then方法
+(1.then 链式操作用:维护状态、传递状态的方式来使得回调函数能够及时调用
+(2.把Promise的状态置为rejected，这样我们在then中就能捕捉到，然后执行“失败”情况的回调
+(3.then方法可以接受两个参数，第一个对应resolve的回调，第二个对应reject的回调。
+
+all方法
+谁跑得慢以谁为准执行回调,all接受一个数组参数,返回res(all里面每一个返回值)组成的数组，里面的值最终都返回promise对象，一个失败全失败
+(all怎么去实现封装)
+Promise.all([
+  axios.get('xxx/books').then((res) => res.data.data),
+  axios.get('xxx/books').then((res) => res.data.data),
+  axios.get('xxx/books').then((res) => res.data.data),
+])
+.then((responseList) => {
+  // 结果顺序和传入顺序一致
+});
+race方法
+用race给某个异步请求设置超时时间，并且在超时后执行相应的操作,结果返回最快的那个
+Promise.race([
+  axios.get('xxx/books').then((res) => res.data.data),
+  axios.get('xxx/books').then((res) => res.data.data),
+  axios.get('xxx/books').then((res) => res.data.data),
+])
+.then((res) => {
+  // 结果是返回的最快的那个
+});
+
+catch方法
+(1.它和then的第二个参数一样，用来指定reject的回调
+(2.在执行resolve的回调（也就是上面then中的第一个参数）时，如果抛出异常了（代码出错了），那么并不会报错卡死js，而是会进到这个catch方法中。类似于try...catch
+
+//创建Promise实例
+function getBooks () {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      method: 'GET',
+      url: 'xxx/books',
+      success (res) {
+        resolve(res);
+      },
+      error (err) {
+        reject(err);
+      },
+    });
+  });
+}
+使用：
+//(1.async + await instance
+async function fn () {
+  const res = await getBooks();
+  console.log(res);
+}
+
+fn();
+//2.instance.then().catch()
+// 基本用法
+getBooks()
+  .then((res) => {
+    console.log(res);
+  })
+	.catch((err) => {
+  	console.log(err);
+	});
+
+// 3.稍微高级
+// instance.then() 返回一个Promise实例 相当于重新resolve( 前一个.then的返回值 )了一下 
+getBooks()
+  .then((res) => res.data.data)
+	.then((data) => {
+  	console.log(data);
+	})
+	.catch((err) => {
+  	console.log(err);
+	});
+//4.稍微高级await + 稍微高级.then
+function getBooks () {
+  return axios.get('xxx/books').then((res) => res.data.data);
+}
+
+async function fn () {
+  const data = await getBooks();
+  console.log(data);
+}
+
+fn();
+
+13.XMLHttpRequest xhr
+get
+//(1.创建对象
+let xhr = new XMLHttpRequest()
+// (2.调用函数.open() 
+xhr.open('get', 'http://www.liulongbin.top:3006/api/getbooks')
+// (3.调用.send() 
+xhr.send()
+// (4.监听onreadystatechange事件 xhr
+xhr.onreadystatechange = function () {
+   if (xhr.readyState === 4 && xhr.status === 200) {
+        console.log(xhr.responseText); //获取响应数据
+     }
+  }
+post
+//创建xhr对象
+            const xhr = new XMLHttpRequest()
+            //2.调用open()
+            xhr.open('POST', url )
+            //3.设置Content-Type属性（固定写法）
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            //4.调用send()
+            xhr.send(getPostDate(str))
+            //5.监听onreadystatechange
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const res = xhr.responseText
+                }
+                cb(res)
+            }
+封装
+事件循环机制
+
+宏微任务：异步任务主要分为宏任务与微任务两种。ES6 
+宏任务（Macrotask） 称为 Task，由宿主（浏览器、Node）发起的 。
+       setTimeout、setInterval
+	
+微任务（Microtask） 称为 Jobs，而微任务由 JS 自身发起。
+       promise.then.catch
+
+EventLoop：
+判断宏任务队列是否为空
+
+不空 --> 执行最早进入队列的任务 --> 执行下一步
+空 --> 执行下一步
+判断微任务队列是否为空
+
+不空 --> 执行最早进入队列的任务 --> 继续检查微任务队列空不空
+空 --> 执行下一步
+
+14.数据交换格式
+服务器端和客户端数据传输与交换的格式(xml与Json)
+xml:可扩展的标记语言--传输存储数据
+Json:js对象和数组的字符串表示法--本质是字符串
+{key:value,key:value...}  value数据类型为数字，字符串，布尔值，null，数组，对象6种数据类型,其中引号必须要用双引号
+Json->object json.stringify()--序列化
+object->Json json.parse()--反序列化
+
+XMLHttpRequest level2
+上传文件 FormData 
+常用的用法有两个：一个是将 form 表单的数据进行序列化，通过 AJAX 发送数据；另一个创建 Content-Type 是 multipart/form-data 类型的数据，常用于文件上传。
+封装upload：
+（1.xhr.setRequestHeader(); 可以用来设置请求头信息；位置要在 xhr.open() 之后设置才可以。
+（2.因为文件上传用到了 FormData 对象，不需要重复设置请求头的 Content-Type 信息。
+
+var xhr = new XMLHttpRequest();
+var url = "要访问的服务器地址的数据页面";
+xhr.open("get",url,true);
+xhr.onreadystatechange = function(){
+    if(xhr.readyState === 4 && xhr.status === 200){
+        alert(this.responseText);
+        var myObject = JSON.parse(this.responseText);
+    }
+};
+xhr.send(null);
+
+15.token(写在请求头中,协议规定、数据存储等等作用)
+headers:{
+'TENKEN':'ff00aa'//哈希值
+'Content-Type':xxxx
+},
+
+//后端代码:
+ {
+   ff00aa:{
+      isLogin:true,//对应'TENKEN'验证用户是否在登录
+      isOnline:true,
+      isDelay:true,//'TENKEN'过期
+   }
+}
+16.HTTP 超文本传输协议
+cdn与视频云
+通信：谁(主体) 将什么(内容)传递(方式)  
+通信协议Communication Protocal：通信规则
+交互模型: 请求/响应 
+请求头:描述客户端基本信息把客户端信息传给服务器
+User-Agent当前是什么类型浏览器
+Content-Type发送到服务器的数据格式
+Accept
+Accept-Language
+
+
+
+
+
+
+
+
+
+
