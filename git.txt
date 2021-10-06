@@ -1,0 +1,78 @@
+Git 的工作流程分为以下几步:
+本地没有现成的Git仓库：
+echo "# project_1" >> README.md
+git init 初始化仓库
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/18787854590/project_1.git
+git push -u origin main第一次向仓库提交
+git push不是第一次向仓库提交，最新代码推送
+
+本地有现成的Git仓库：
+git remote add origin https://github.com/18787854590/project_1.git
+git branch -M main
+git push -u origin main
+
+
+1.git status
+git status -s
+查看代码的修改状态
+
+modified 代表文件和上一版本相比，有过修改
+new  file  代表文件是新增加的
+deleted   代表文件被删除了，提交成功后，文件将从repository中删除
+untracked file 一般都是新增加的文件夹
+
+
+2.git diff <filename>
+查看代码的修改内容
+
+
+查看历史修改，需要用到节点hashcode（hashcode可以从github上commit记录上获得）:
+git diff <hascode> <hashcode> <filename>
+
+3.git add <filename>
+暂存需要提交的代码
+
+增加一个需要上传的文件git add <filename>
+删除一个不需要的文件：git rm <filename>
+增加全部需要上传的文件：git add --all
+向暂存区一次性添加多个文件:git add .
+git chekout --文件名   撤销对文件的修改
+
+跳过暂存区,直接将工作区中的修改提交到git仓库 git commot -a -m "描述信息"
+
+4.git commit
+提交已暂存的文件
+git commit -m "提交信息"
+git commit --amend如果发现有文件漏提或注释有误，使用amend修正
+取消暂存的文件:git reset HERD 
+取消所有暂存的文件:git reset HERD .
+
+5.同步到服务器
+git push -u origin master
+
+git pull/先同步代码到本地
+git push origin <本地分支名>/再同步到服务器
+
+6.移除文件
+(1.从Git仓库和工作区同时移除 git rm -f 文件
+(2.只从Git仓库中移除文件，但保留工作区中的文件 git rm --cached 文件
+
+7.忽略文件
+无需纳入Git管理，也不希望出现在未跟踪文件列表，此时创建一个.gitgnore配置文件,列出要忽略的文件匹配模式
+(1.以#开头为注释
+(2.以/开头防止递归
+(3.以/结尾是目录
+(4.以！开头表示取反
+(5.可以使用glob模式进行文件和文件夹的匹配(glob简化了的正则)
+
+GPL:Linux
+MIT:jquery
+
+
+18787854590
+www585955
+
+
