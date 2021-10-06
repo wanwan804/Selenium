@@ -1,0 +1,58 @@
+数据渲染
+
+
+1.是否显示标题组件
+title：{
+show：true，
+}
+2.鼠标放上边有白色阴影（柱状图）
+axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+ }
+3.折线平滑
+ smooth: true,
+4.rose图折线颜色
+ labelLine: {
+      lineStyle: {
+      color: colors[i],//可设置数组
+ },
+5.柱状图（网格）
+ grid: {
+            top: 10,
+            right: 1,
+            bottom: 20,
+            // left: 0, // 不给left的话  left将会根据数据自适应
+        },
+6.柱状图柱子颜色
+color: [
+            {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [{
+                    offset: 0, color: '#fff7e6' // 0% 处的颜色
+                }, {
+                    offset: 1, color: '#ffc069' // 100% 处的颜色
+                }],
+            },
+        ],
+7.颜色
+ lineStyle: {
+        color: `rgba(${ 13 * 16 + 4 }, ${ 6 * 16 + 11 }, ${ 8 }, .3)`,
+     },
+8.坐标轴颜色
+axisLabel: {
+    color: '#9254de',
+},
+lineStyle: {
+    color: '#9254de',
+     }
+9.x轴刻度是否显示
+axisTick: {
+   show: false,
+},
+10.坐标轴分割段
+ splitNumber: 4,
+11.
